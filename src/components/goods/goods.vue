@@ -68,13 +68,13 @@
     },
     methods: {
       _initScroll() {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, { // 初始化，使控件menuWrapper可以滑动
           click: true
-        }) // 初始化，是控件menuWrapper可以滑动
-        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { // probeType创建监听滑动事件，1滑动一定时间后触发,2滑动时触发,3手指离开滑动动画进行时也触发
+        }) 
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { // probeType设置滑动事件监听等级，1滑动一定时间后触发,2滑动时触发,3手指离开滑动动画进行时也触发
           probeType: 3
         })
-        this.foodsScroll.on('scroll', (pos) => { // 滑动触发事件
+        this.foodsScroll.on('scroll', (pos) => { // 监听滑动事件
           this.scrollY = Math.abs(Math.round(pos.y))
         })
       },
@@ -89,12 +89,15 @@
         }
       },
       selectMenu(index, event) { // 左侧列表点击联动右侧列表滑动
-        if (!event._constructed) { /* better-scroll在允许点击后，在PC端和某些移动端上因为没有将touchend事件move掉,点击事件会执行两次*/
-          return /* better-scroll派发的event事件和原生js的event,其中只有better-scroll派发的event事件有_constructed属性*/
-        } /* 其值为true,所以为了保证点击事件只执行一次，判断为js原生事件时return不执行任何操作 */
+        /* better-scroll在允许点击后，在PC端和某些移动端上因为没有将touchend事件move掉,点击事件会执行两次*/
+        /* better-scroll派发的event事件和原生js的event,其中只有better-scroll派发的event事件有_constructed属性*/
+        /* 其值为true,所以为了保证点击事件只执行一次，判断为js原生事件时return不执行任何操作 */
+        if (!event._constructed) {
+          return
+        }
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
         let el = foodList[index]
-        this.foodsScroll.scrollToElement(el, 300) // 滑动到el的dom元素位置，300ms动画时间
+        this.foodsScroll.scrollToElement(el, 100) // 滑动到el的dom元素位置，300ms动画时间
       }
     },
     components: {

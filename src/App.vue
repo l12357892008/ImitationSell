@@ -11,7 +11,8 @@
       div.tab-item
         router-link.luYou(to="/seller") 商家
     <!-- 内容 -->
-    router-view(keep-alive :seller="seller")
+    keep-alive
+      router-view(:seller="seller")
 </template>
 
 <script>
@@ -33,6 +34,7 @@ export default {
       }
     }, (response) => {
       alert('请求数据失败，请检查网络设置后再重试')
+      console.log(response)
     })
   },
   components: {
