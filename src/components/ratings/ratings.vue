@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <!-- <turnPlay style='width: 80%;'></turnPlay> -->
+    <v-shuffle></v-shuffle>
   </div>
 </template>
 
 <script>
-// import turnPlay from '../turnPlay/turnPlay.vue'
+import shuffle from '../shuffle/shuffle.vue'
 export default {
   data() {
     return {
@@ -18,6 +18,7 @@ export default {
   methods: {
   },
   components: {
+    'v-shuffle': shuffle
   }
 }
 </script>

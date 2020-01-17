@@ -7,10 +7,10 @@
           span.text {{item.name}}
     div.foods-wrapper(ref='foodsWrapper')
       ul
-        li.food-list.food-list-hook(v-for="item in goods")
+        li.food-list.food-list-hook(v-for="(item,index1) in goods")
           h1.title {{item.name}}
           ul
-            li.food-item(v-for="food in item.foods")
+            li.food-item(v-for="(food,index2) in item.foods")
               div.icon
                 img(:src="food.icon")
               div.content
@@ -22,19 +22,25 @@
                 div.price
                   span.now ￥{{food.price}}
                   span.old(v-show="food.oldPrice") ￥{{food.oldPrice}}
-    v-shopCart( :deliveryPrice = "seller.deliveryPrice" :minPrice = "seller.minPrice")
+                div.cartControl-wrapper
+                  v-cartControl( :food="food" :isDisable='isDisable' @increase='bounceBall')
+    v-shopCart( ref='shopCartR' :deliveryPrice = "seller.deliveryPrice" :minPrice = "seller.minPrice" :selectFoods="selectFoods" @disable='disable')
 </template>
 
 <script>
   import BScroll from 'better-scroll'; // 组件滑动库，详见http://ustbhuangyi.github.io/better-scroll/doc/api.html
   import shopCart from '../shopCart/shopCart.vue'
+  import cartControl from '../cartControl/cartControl.vue'
+  import Vue from 'vue'
+
   const ERR_OK = 0
   export default {
     data() {
       return {
         goods: [],
         listHeight: [], // 各分类商品高度数组
-        scrollY: 0 // 当前滚动位置
+        scrollY: 0, // 当前滚动位置
+        isDisable: 'auto',  // 是否可点击增加按钮
       }
     },
     props: {
@@ -56,7 +62,7 @@
       })
     },
     computed: {
-      currentIndex() {
+      currentIndex() {  // 当前在哪一栏目位置
         for (let i = 0; i < this.listHeight.length; i++) {
           let height1 = this.listHeight[i]
           let height2 = this.listHeight[i + 1]
@@ -64,14 +70,26 @@
             return i;
           }
         }
+      },
+      selectFoods() {
+        let selected = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if(food.count > 0){
+              selected.push(food)
+            }
+          })
+        })
+        return selected
       }
     },
     methods: {
       _initScroll() {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, { // 初始化，使控件menuWrapper可以滑动
-          click: true
-        }) 
+          click: true   // better-scroll默认会阻止点击事件，要手动设置允许点击
+        })
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { // probeType设置滑动事件监听等级，1滑动一定时间后触发,2滑动时触发,3手指离开滑动动画进行时也触发
+          click: true,
           probeType: 3
         })
         this.foodsScroll.on('scroll', (pos) => { // 监听滑动事件
@@ -98,10 +116,17 @@
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 100) // 滑动到el的dom元素位置，300ms动画时间
+      },
+      bounceBall(e) { // 获取点击增加按钮的元素对象
+        this.$refs.shopCartR.drop(e)
+      },
+      disable(input) {
+        this.isDisable = input
       }
     },
     components: {
-      'v-shopCart': shopCart
+      'v-shopCart': shopCart,
+      'v-cartControl': cartControl
     }
   }
 </script>
@@ -128,7 +153,7 @@
       .menu-item {
         display: table;
         height: 54px;
-        width: 56px;
+        width: 54px;
         line-height: 14px;
         padding: 0 13px;
 
@@ -256,6 +281,12 @@
               font-size: 10px;
               color: rgb(147, 153, 159);
             }
+          }
+
+          .cartControl-wrapper{
+            position: absolute;
+            right: 0;
+            bottom: 4px;
           }
         }
       }
