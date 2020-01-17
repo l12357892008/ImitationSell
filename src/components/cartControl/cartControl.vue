@@ -17,21 +17,25 @@
       return {}
     },
     props: {
-      food: {
+      food: {  // 商品信息
         type: Object
       },
-      isDisable:　{
+      isDisable: {  // 是否可点击，小球下落动画过程中使按钮不可点击
         type: String,
         default() {
           return 'auto'
         }
+      },
+      origin: {   // 是否触发小球下落动画,在购物车详情中使用该组件不触发小球动画
+        type: Boolean,
+        default() {
+          return true
+        }
       }
     },
-    created() {
-      console.log(this.isDisable)
-    },
+    created() {},
     methods: {
-      increaseCount(event) {
+      increaseCount(event) {  // 增加选中数量
         if (!event._constructed) {
           return
         }
@@ -40,9 +44,11 @@
         } else {
           this.food.count++
         }
-        this.$emit('increase', event.target)
+        if(this.origin){  // 触发小球下落动画
+          this.$emit('increase', event.target)
+        }
       },
-      decreaseCount(event) {
+      decreaseCount(event) {  // 减少选中数量
         if (!event._constructed) {
           return
         }
@@ -89,9 +95,11 @@
         color: #00a0dc;
       }
     }
-    cart-increase:{
+
+    cart-increase: {
       z-index: 2;
     }
+
     .cart-number {
       flex: 1;
       font-size: 15px;

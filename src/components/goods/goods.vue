@@ -44,7 +44,7 @@
       }
     },
     props: {
-      seller: {
+      seller: {  // 商家信息
         type: Object
       }
     },
@@ -71,7 +71,7 @@
           }
         }
       },
-      selectFoods() {
+      selectFoods() {  // 已选中商品对象数组
         let selected = []
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
@@ -118,9 +118,9 @@
         this.foodsScroll.scrollToElement(el, 100) // 滑动到el的dom元素位置，300ms动画时间
       },
       bounceBall(e) { // 获取点击增加按钮的元素对象
-        this.$refs.shopCartR.drop(e)
+        this.$refs.shopCartR.drop(e)  // 调用子组件方法触发小球动画
       },
-      disable(input) {
+      disable(input) {  // 触发不能点击增加减少选中数量
         this.isDisable = input
       }
     },

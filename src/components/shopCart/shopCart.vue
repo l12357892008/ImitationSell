@@ -25,15 +25,36 @@
           </div>
         </transition-group>
       </div>
+      <div class="shopCart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li class="list-item" v-for="food in selectFoods">
+              <span class="name">{{ food.name }}</span>
+              <div class="price">
+                <span>￥{{ food.price * food.count }}</span>
+              </div>
+              <div class="cartControl-wrapper">
+                <v-cartControl :food = "food" :origin = 'false'></v-cartControl>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import cartControl from '../cartControl/cartControl.vue'
+
   export default {
     data() {
       return {
-        balls: Array.apply(null, { // 生成1个小球
+        balls: Array.apply(null, { // 生成1个小球,本来是多个的,多个小球动画同时播放影响性能，就限制成一个
           length: 1,
         }).map((array1, index) => {
           return {
@@ -41,7 +62,8 @@
             show: false
           }
         }),
-        dropBall: [], // 已经在下落的小球 
+        dropBall: [], // 已经在下落的小球
+        listShow: false, // 是否显示购物车详情
       }
     },
     props: {
@@ -83,20 +105,20 @@
           return '去结算'
         }
       },
-      isDisable() {  // 结算按钮是否可点击
-        if(this.totalPrice >= this.minPrice){
+      isDisable() { // 结算按钮是否可点击
+        if (this.totalPrice >= this.minPrice) {
           return 'auto'
-        }else {
+        } else {
           return 'none'
         }
       }
     },
     methods: {
       drop(el) { // 小球下落动画
-        this.$emit('disable', 'none')  // 一次只下落一个小球，通知小球下落时间内增减按钮不可点击
+        this.$emit('disable', 'none') // 一次只下落一个小球，通知小球下落时间内增减按钮不可点击
         setTimeout(() => {
           this.$emit('disable', 'auto')
-        },500)
+        }, 500)
         for (let i = 0; i < this.balls.length; i++) {
           if (!this.balls[i].show) {
             this.balls[i].show = true
@@ -114,7 +136,6 @@
         let rect2 = el.getBoundingClientRect()
         let x = rect.left
         let y = rect.top
-        // el.style.display = '';
         el.style.transform = `translate3d(0, -${y}px, 0)`
 
         let inner = el.getElementsByClassName('inner')[0]
@@ -132,12 +153,20 @@
         let ball = this.dropBall.shift()
         ball.show = false
       },
-      pay() {
+      pay() {  // 去结算
         alert('醒醒,你哪来的钱')
       },
-      showCart() { // 显示购物车
-
+      showCart() { // 显示/隐藏购物车详情
+        if(!this.listShow && this.totalCount > 0){
+          this.listShow = true
+        }else {
+          this.listShow = false
+        }
+        console.log(this.listShow)
       }
+    },
+    components: {
+      'v-cartControl': cartControl
     }
   }
 </script>
@@ -156,9 +185,11 @@
     bottom: 0;
     z-index: 30;
   }
-  .wrapper{
+
+  .wrapper {
     position: relative;
   }
+
   .content {
     display: flex;
     flex-direction: row;
@@ -281,5 +312,9 @@
         transition: all 0.4s linear;
       }
     }
+  }
+
+  .shopCart-list{
+
   }
 </style>
