@@ -124,7 +124,6 @@
             this.balls[i].show = true
             this.balls[i].el = el // 将点击的按钮的dom元素信息存入小球
             this.dropBall.push(this.balls[i])
-            console.log(this.dropBall)
             break
           }
         }
@@ -315,6 +314,8 @@
   }
 
   .shopCart-list{
-
+    position: fixed;
+    bottom: 48px;
+    max-height: 300px;
   }
 </style>
