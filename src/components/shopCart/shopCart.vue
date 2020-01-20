@@ -114,14 +114,14 @@
       }
     },
     methods: {
-      drop(el) { // 小球下落动画
+      drop(el) { // 触发动画
         this.$emit('disable', 'none') // 一次只下落一个小球，通知小球下落时间内增减按钮不可点击
         setTimeout(() => {
           this.$emit('disable', 'auto')
         }, 500)
         for (let i = 0; i < this.balls.length; i++) {
           if (!this.balls[i].show) {
-            this.balls[i].show = true
+            this.balls[i].show = true  // 触发小球下落动画
             this.balls[i].el = el // 将点击的按钮的dom元素信息存入小球
             this.dropBall.push(this.balls[i])
             break
@@ -132,7 +132,6 @@
         let count = this.dropBall.length - 1
         let ball = this.dropBall[count]
         let rect = ball.el.getBoundingClientRect() // 获取点击的按钮的位置信息
-        let rect2 = el.getBoundingClientRect()
         let x = rect.left
         let y = rect.top
         el.style.transform = `translate3d(0, -${y}px, 0)`

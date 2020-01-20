@@ -88,9 +88,9 @@
         this.menuScroll = new BScroll(this.$refs.menuWrapper, { // 初始化，使控件menuWrapper可以滑动
           click: true   // better-scroll默认会阻止点击事件，要手动设置允许点击
         })
-        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { // probeType设置滑动事件监听等级，1滑动一定时间后触发,2滑动时触发,3手指离开滑动动画进行时也触发
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           click: true,
-          probeType: 3
+          probeType: 3   // probeType设置滑动事件监听等级，1滑动一定时间后触发,2滑动时触发,3手指离开滑动动画进行时也触发
         })
         this.foodsScroll.on('scroll', (pos) => { // 监听滑动事件
           this.scrollY = Math.abs(Math.round(pos.y))
